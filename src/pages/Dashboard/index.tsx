@@ -32,13 +32,22 @@ const Dashboard: React.FC = () => {
     }
 
     loadFoods();
-  }, []);
+  }, [foods]);
 
   async function handleAddFood(
     food: Omit<IFoodPlate, 'id' | 'available'>,
   ): Promise<void> {
     try {
-      // TODO ADD A NEW FOOD PLATE TO THE API
+      const { description, image, name, price } = food;
+      const newFood = await api.post('foods', {
+        name,
+        description,
+        image,
+        price,
+        available: true,
+      });
+
+      setFoods([...foods, newFood.data]);
     } catch (err) {
       console.log(err);
     }
@@ -64,13 +73,12 @@ const Dashboard: React.FC = () => {
 
   function handleEditFood(food: IFoodPlate): void {
     // TODO SET THE CURRENT EDITING FOOD ID IN THE STATE
-
   }
 
   return (
     <>
       <Header openModal={toggleModal} />
-      
+
       <ModalAddFood
         isOpen={modalOpen}
         setIsOpen={toggleModal}
